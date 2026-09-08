@@ -1,6 +1,6 @@
 # Data model
 
-`data/sources.json` 保存当前 Source Registry，包括 `source_id`、显示名、核素、参考数值与单位、位置、holder 和状态。普通放射性源使用 Bq；`source.md` 中的 AmC/AmBe 中子源使用 `n/s`，其原始台账信息保存在每个 Source 的 `ledger` 元数据中。可选状态严格限定为 `in_stock`、`checked_out`、`calibrating`、`inactive`。
+`data/sources.json` 保存当前 Source Registry，包括 `source_id`、显示名、核素、参考数值与单位、位置、holder 和状态。普通放射性源使用 Bq；`source.md` 中的 AmC/AmBe 中子源使用 `n/s`，其原始台账信息保存在每个 Source 的 `ledger` 元数据中。可选状态严格限定为 `in_stock`、`checked_out`、`calibrating`、`acu_in_use`、`cls_in_use`、`inactive`，分别表示在库、借出、刻度中、ACU在用、CLS在用和停用。
 
 台账导入由 `scripts/import_source_ledger.py` 完成。每个 Source 的 `activity.reference_date` 使用 `source.md` 的“记录日期”，当前活度和历史活度都以该日期作为指数衰变的起点。
 

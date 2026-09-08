@@ -53,6 +53,8 @@ PYTHONPATH=backend python scripts/import_source_ledger.py
 
 未登录访问会进入匿名 `viewer` 模式，可查看总览、Source、活度、刻度历史和 CSV 导出。借出、归还、刻度、Source 修改、用户管理、审计和导入仍需登录并通过角色权限校验。页面中的“管理登录”可切换到本地账号登录。
 
+Source 状态包括：在库、借出、刻度中、ACU在用、CLS在用和停用。操作员或管理员可以从 Source 详情页标记 ACU/CLS 在用，并在使用结束后恢复为在库。
+
 开发前端时可以分别运行 `npm --prefix frontend run dev` 和 `./start.sh`；Vite 会把 `/api` 代理到 8080。
 
 ## 数据与安全边界

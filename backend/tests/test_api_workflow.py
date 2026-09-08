@@ -42,9 +42,17 @@ def test_source_state_workflow_and_permissions(app):
             assert end.status_code == 200 and end.json()["status"] == "checked_out"
             returned_status = await client.post(f"/api/v1/sources/{source_id}/return", json={"location": {"building": "Room"}})
             assert returned_status.status_code == 200 and returned_status.json()["status"] == "in_stock"
+            acu_started = await client.post(f"/api/v1/sources/{source_id}/acu/start", json={})
+            assert acu_started.status_code == 200 and acu_started.json()["status"] == "acu_in_use"
+            acu_ended = await client.post(f"/api/v1/sources/{source_id}/acu/end", json={})
+            assert acu_ended.status_code == 200 and acu_ended.json()["status"] == "in_stock"
+            cls_started = await client.post(f"/api/v1/sources/{source_id}/cls/start", json={})
+            assert cls_started.status_code == 200 and cls_started.json()["status"] == "cls_in_use"
+            cls_ended = await client.post(f"/api/v1/sources/{source_id}/cls/end", json={})
+            assert cls_ended.status_code == 200 and cls_ended.json()["status"] == "in_stock"
             returned = (await client.get(f"/api/v1/sources/{source_id}")).json()
             actions = [row["action"] for row in returned["transactions"]]
-            assert {"create", "checkout", "return", "calibration_start", "calibration_end"}.issubset(actions)
+            assert {"create", "checkout", "return", "calibration_start", "calibration_end", "acu_use_start", "acu_use_end", "cls_use_start", "cls_use_end"}.issubset(actions)
             assert len(returned["calibrations"]) == 1
             assert returned["calibrations"][0]["end_time"] is not None
             activity = await client.get(f"/api/v1/sources/{source_id}/activity?time=2026-01-01T00:00:00Z")

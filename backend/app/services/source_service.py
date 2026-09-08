@@ -21,9 +21,11 @@ from app.services.transaction_service import TransactionService
 
 
 TRANSITIONS = {
-    "in_stock": {"checked_out", "calibrating"},
+    "in_stock": {"checked_out", "calibrating", "acu_in_use", "cls_in_use"},
     "checked_out": {"in_stock", "calibrating"},
     "calibrating": {"checked_out", "in_stock"},
+    "acu_in_use": {"in_stock"},
+    "cls_in_use": {"in_stock"},
     "inactive": set(),
 }
 
@@ -123,6 +125,26 @@ class SourceService:
         if old.status != "checked_out":
             raise ValueError(f"source must be checked_out, currently {old.status}")
         return self._change_status(source_id, "in_stock", user=user, action="return", comment=request.comment, location_after=request.location, ip_address=ip_address, clear_holder=True)
+
+    def start_system_use(self, source_id: str, system: str, comment: str, user: dict | None, ip_address: str | None = None) -> Source:
+        targets = {"acu": ("acu_in_use", "ACU"), "cls": ("cls_in_use", "CLS")}
+        if system not in targets:
+            raise ValueError(f"unsupported system: {system}")
+        old = self.get_source(source_id)
+        if old.status != "in_stock":
+            raise ValueError(f"source must be in_stock, currently {old.status}")
+        target, label = targets[system]
+        return self._change_status(source_id, target, user=user, action=f"{system}_use_start", purpose=f"{label} in use", comment=comment, ip_address=ip_address)
+
+    def end_system_use(self, source_id: str, system: str, comment: str, user: dict | None, ip_address: str | None = None) -> Source:
+        targets = {"acu": ("acu_in_use", "ACU"), "cls": ("cls_in_use", "CLS")}
+        if system not in targets:
+            raise ValueError(f"unsupported system: {system}")
+        expected, label = targets[system]
+        old = self.get_source(source_id)
+        if old.status != expected:
+            raise ValueError(f"source must be {expected}, currently {old.status}")
+        return self._change_status(source_id, "in_stock", user=user, action=f"{system}_use_end", purpose=f"{label} use ended", comment=comment, ip_address=ip_address)
 
     def start_calibration(self, source_id: str, request: CalibrationStartRequest, user: dict | None, ip_address: str | None = None) -> tuple[Source, int]:
         old = self.get_source(source_id)

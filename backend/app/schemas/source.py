@@ -6,9 +6,9 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
-SourceStatus = Literal["in_stock", "checked_out", "calibrating", "inactive"]
+SourceStatus = Literal["in_stock", "checked_out", "calibrating", "acu_in_use", "cls_in_use", "inactive"]
 ActivityUnit = Literal["Bq", "n/s"]
-ACTIVE_STATUSES = {"in_stock", "checked_out", "calibrating"}
+ACTIVE_STATUSES = {"in_stock", "checked_out", "calibrating", "acu_in_use", "cls_in_use"}
 
 
 class ActivityInfo(BaseModel):
@@ -93,6 +93,10 @@ class CheckoutRequest(BaseModel):
 
 class ReturnRequest(BaseModel):
     location: LocationInfo = Field(default_factory=LocationInfo)
+    comment: str = ""
+
+
+class UseRequest(BaseModel):
     comment: str = ""
 
 

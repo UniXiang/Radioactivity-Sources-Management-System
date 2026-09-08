@@ -12,7 +12,7 @@ from app.dependencies import client_ip, current_user, public_viewer, require_rol
 from app.schemas.auth import LoginRequest, UserCreate, UserPatch
 from app.schemas.calibration import CalibrationCreate
 from app.schemas.import_xlsx import ImportConfirmRequest
-from app.schemas.source import CalibrationStartRequest, CheckoutRequest, ReturnRequest, SourceCreate, SourcePatch
+from app.schemas.source import CalibrationStartRequest, CheckoutRequest, ReturnRequest, SourceCreate, SourcePatch, UseRequest
 
 
 router = APIRouter(prefix="/api/v1")
@@ -55,10 +55,14 @@ async def dashboard(user=Depends(public_viewer), service=Depends(services)):
             "in_stock": sum(source.status == "in_stock" for source in active),
             "checked_out": sum(source.status == "checked_out" for source in active),
             "calibrating": sum(source.status == "calibrating" for source in active),
+            "acu_in_use": sum(source.status == "acu_in_use" for source in active),
+            "cls_in_use": sum(source.status == "cls_in_use" for source in active),
             "inactive": sum(source.status == "inactive" for source in sources),
         },
         "checked_out": [source.model_dump(mode="json") for source in active if source.status == "checked_out"],
         "calibrating": [source.model_dump(mode="json") for source in active if source.status == "calibrating"],
+        "acu_in_use": [source.model_dump(mode="json") for source in active if source.status == "acu_in_use"],
+        "cls_in_use": [source.model_dump(mode="json") for source in active if source.status == "cls_in_use"],
         "recent_activity": [dict(row) for row in recent],
     }
 
@@ -125,6 +129,26 @@ async def checkout_source(request: Request, source_id: str, payload: CheckoutReq
 @router.post("/sources/{source_id}/return")
 async def return_source(request: Request, source_id: str, payload: ReturnRequest, user=Depends(require_role("operator", "admin")), service=Depends(services)):
     return service.source_service.return_source(source_id, payload, user, client_ip(request)).model_dump(mode="json")
+
+
+@router.post("/sources/{source_id}/acu/start")
+async def start_acu_use(request: Request, source_id: str, payload: UseRequest, user=Depends(require_role("operator", "admin")), service=Depends(services)):
+    return service.source_service.start_system_use(source_id, "acu", payload.comment, user, client_ip(request)).model_dump(mode="json")
+
+
+@router.post("/sources/{source_id}/acu/end")
+async def end_acu_use(request: Request, source_id: str, payload: UseRequest, user=Depends(require_role("operator", "admin")), service=Depends(services)):
+    return service.source_service.end_system_use(source_id, "acu", payload.comment, user, client_ip(request)).model_dump(mode="json")
+
+
+@router.post("/sources/{source_id}/cls/start")
+async def start_cls_use(request: Request, source_id: str, payload: UseRequest, user=Depends(require_role("operator", "admin")), service=Depends(services)):
+    return service.source_service.start_system_use(source_id, "cls", payload.comment, user, client_ip(request)).model_dump(mode="json")
+
+
+@router.post("/sources/{source_id}/cls/end")
+async def end_cls_use(request: Request, source_id: str, payload: UseRequest, user=Depends(require_role("operator", "admin")), service=Depends(services)):
+    return service.source_service.end_system_use(source_id, "cls", payload.comment, user, client_ip(request)).model_dump(mode="json")
 
 
 @router.post("/sources/{source_id}/calibration/start")
