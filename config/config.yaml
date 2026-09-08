@@ -1,0 +1,25 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+
+timezone: Asia/Shanghai
+
+data:
+  sources_file: data/sources.json
+  database_file: data/database/juno_sources.db
+  isotopes_file: config/isotopes.json
+  imports_directory: data/imports
+
+logs_directory: logs
+
+backup:
+  directory: data/backups
+  retention_days: 30
+
+security:
+  session_expire_hours: 12
+  session_cookie_secure: false
+
+activity:
+  allow_backward_evaluation: true
+

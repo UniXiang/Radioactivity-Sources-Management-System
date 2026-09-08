@@ -1,0 +1,18 @@
+[Unit]
+Description=JUNO Calibration Source Management System
+After=network.target
+
+[Service]
+Type=simple
+User=jcsms
+Group=jcsms
+WorkingDirectory=/opt/juno-source-management
+Environment=PYTHONPATH=/opt/juno-source-management/backend
+ExecStart=/opt/juno-source-management/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8080
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

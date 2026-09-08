@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "isotopes": {
+    "Ge-68": {
+      "half_life_value": 270.95,
+      "half_life_unit": "day",
+      "decay_model": "simple_exponential",
+      "daughter": "Ga-68",
+      "description": ""
+    },
+    "Na-22": {
+      "half_life_value": 2.6018,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "Cs-137": {
+      "half_life_value": 30.05,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "Co-60": {
+      "half_life_value": 5.2714,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "Mn-54": {
+      "half_life_value": 312.2,
+      "half_life_unit": "day",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "Zn-65": {
+      "half_life_value": 243.93,
+      "half_life_unit": "day",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "K-40": {
+      "half_life_value": 1.248e9,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "Am-241": {
+      "half_life_value": 432.2,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "Ra-226": {
+      "half_life_value": 1600.0,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": ""
+    },
+    "AmC（中子源）": {
+      "half_life_value": 432.2,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": "中子发射率按 Am-241 半衰期估算"
+    },
+    "AmBe（中子源）": {
+      "half_life_value": 432.2,
+      "half_life_unit": "year",
+      "decay_model": "simple_exponential",
+      "description": "中子发射率按 Am-241 半衰期估算"
+    }
+  }
+}
